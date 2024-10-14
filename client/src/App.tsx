@@ -1,18 +1,29 @@
-import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+// import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 
 import "../src/assets/styles/main.scss";
 
 import RightBar from "./components/RightBar";
 import LeftNavbar from "./components/LeftNavbar";
 import DroppableArea from "./components/DroppableArea";
+import { useDispatch } from "react-redux";
+import { add } from "./features/form/formSlice";
 
 function App() {
-  const [isDropped, setIsDropped] = useState(false);
+  // const [isDropped, setIsDropped] = useState(false);
 
-  function handleDragEnd(e: any) {
+  const dispatch = useDispatch();
+
+  function handleDragEnd(e: DragEndEvent) {
     if (e.over && e.over.id === "drop") {
-      setIsDropped(true);
+      dispatch(
+        add({
+          id: uuidv4(),
+          text: "Hello World",
+          isDropped: true,
+        })
+      );
     }
   }
 
@@ -21,7 +32,7 @@ function App() {
       <DndContext onDragEnd={handleDragEnd}>
         <main className="main-container">
           <LeftNavbar />
-          <DroppableArea isDropped={isDropped} />
+          <DroppableArea />
           <RightBar />
         </main>
       </DndContext>
